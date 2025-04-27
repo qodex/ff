@@ -1,0 +1,6 @@
+.DS_Store
+.env*
+build
+temp
+*.log
+test*
