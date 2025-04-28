@@ -16,7 +16,7 @@ func CreatePath(path string) error {
 	return nil
 }
 
-func FileAppend(filePath, data string) {
+func FileAppend(filePath string, data []byte) {
 	dir := filepath.Dir(filePath)
 
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
@@ -31,7 +31,7 @@ func FileAppend(filePath, data string) {
 		log.Printf("cmd: add error, %s", err)
 	}
 	defer f.Close()
-	if _, err := f.WriteString(data); err != nil {
+	if _, err := f.Write(data); err != nil {
 		log.Printf("append error: %s", err)
 	}
 }
