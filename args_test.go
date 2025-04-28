@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestArgsCreate(t *testing.T) {
+func TestArgsVal(t *testing.T) {
 	ss := strings.Split("./id1 --url https://api.id1.au create test1", " ")
 	args := NewOsArgs(ss)
 	if val := args.Val("create", ""); val != "test1" {
@@ -16,7 +16,22 @@ func TestArgsCreate(t *testing.T) {
 	}
 }
 
-func TestArgsSet(t *testing.T) {
+func TestArgsKeyVal(t *testing.T) {
+	ss := strings.Split("./id1 env set id=test1 and get var1 uno=\"dos\" --var prop1=\"Ein Zwei\" \"\"...\"", " ")
+	args := NewOsArgs(ss)
+	if key, val := args.KeyVal("set", "a", "b"); key != "id" || val != "test1" {
+		t.Errorf("unexpected key/value: %s=%s", key, val)
+	}
+	if key, val := args.KeyVal("get", "a", "b"); key != "var1" || val != "" {
+		t.Errorf("unexpected key/value: %s=%s", key, val)
+	}
+	if key, val := args.KeyVal("var", "a", "b"); key != "prop1" || val != "Ein Zwei" {
+		t.Errorf("unexpected key/value: %s=%s", key, val)
+	}
+
+}
+
+func TestArgs(t *testing.T) {
 	ss := strings.Split("./id1 https://api.id1.au --id test1 --key test.pem set:/test1/pub/name Test One", " ")
 	args := NewOsArgs(ss)
 	if val := args.Val("id", ""); val != "test1" {
@@ -33,4 +48,13 @@ func TestArgsSet(t *testing.T) {
 	if val := args.RestAfter("set:/test1/pub/name", ""); val != "Test One" {
 		t.Errorf("unexpected cmd data: %s", val)
 	}
+}
+
+func TestArgsLast(t *testing.T) {
+	ss := strings.Split("./id1 https://api.id1.au --id test1 --key test.pem set:/test1/pub/name Test One", " ")
+	args := NewOsArgs(ss)
+	if val := args.Last(); val != "One" {
+		t.Errorf("unexpected last: %s", val)
+	}
+
 }
