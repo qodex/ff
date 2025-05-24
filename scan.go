@@ -30,8 +30,7 @@ func ScanStdin(separator []byte, dataIn chan []byte, eof chan bool) {
 }
 
 func ScanStdinBytes() []byte {
-	if stat, err := os.Stdin.Stat(); err != nil {
-	} else if stat.Mode()&os.ModeCharDevice == 0 && stat.Size() > 0 {
+	if _, err := os.Stdin.Stat(); err == nil {
 		scanner := bufio.NewScanner(os.Stdin)
 		data := []byte{}
 		for scanner.Scan() {
